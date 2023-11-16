@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Search</title>
+    <style>
+      body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(120deg, rgba(8, 67, 163, 0.377), rgb(15, 117, 164)); 
+    margin: 0;
+    padding: 0;
+}
+
+header {
+        background-color: rgb(18, 164, 8);
+        padding: 10px;
+        text-align: center;
+        }
+
+header a {
+        color: #fff;
+        margin: 0 10px;
+        text-decoration: none;
+        }
+
+#countrySearch {
+    background-color: #1db439;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+    margin: 20px auto; 
+    width: 80%;
+    height: 40%;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html">Home</a>
+        <a href="countries.html">Game</a>
+        <a href="search.html">Country Search</a>
+    </header>
+
+    <div id="countrySearch">
+        <h1>Search for a Country</h1>
+        <label for="searchInput">Enter country name:</label>
+        <input type="text" id="searchInput">
+        <button id="searchButton">Search</button>
+        <p id="searchResult">Type a country name above and click Search.</p>
+       
+    </div>
+
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            const searchResult = document.getElementById('searchResult');
+
+           
+            searchButton.addEventListener('click', () => {
+                const countryName = searchInput.value.trim();
+                if (countryName === '') {
+                    searchResult.textContent = 'Please enter a country name.';
+                    return;
+                }
+
+               
+                const apiUrl = `https://restcountries.com/v3.1/name/${countryName}`;
+
+               
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                       
+                        const countryInfo = data[0]; 
+                        if (countryInfo) {
+                            const infoText = `Name: ${countryInfo.name.common}<br>
+                                               Capital: ${countryInfo.capital}<br>
+                                               Region: ${countryInfo.region}<br>
+                                               Population: ${countryInfo.population}`;
+                            searchResult.innerHTML = infoText;
+                        } else {
+                            searchResult.textContent = 'Country not found.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching country information:', error);
+                        searchResult.textContent = 'Error fetching country information';
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
